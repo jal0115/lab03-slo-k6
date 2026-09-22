@@ -73,8 +73,15 @@ Error budget (цагаар): Availability SLO 2 минутын (120 секунд
 - Нийт 2775 HTTP хүсэлт, 925 iteration, 20 VU-аар 1 минутын турш ажиллав.
 
 ### 3.2 Chaos тест (results/chaos.txt)
-(дараа бөглөнө)
-
+- Ажиллуулсан команд: `k6 run slo-test.js --duration 2m 2>&1 | tee results/chaos.txt`
+- Тестийн 25-р секундэд серверийг Ctrl+C-ээр зогсоож, ойролцоогоор 30 секундийн дараа дахин асаав (`node server.js`).
+- Threshold-ийн үр дүн:
+  - Availability (`checks`): rate = 77.95% → 90% босгыг ХАНГААГҮЙ (FAIL)
+  - Reliability (`/pay` error rate): 24.85% → 8% босгыг ХАНГААГҮЙ (FAIL)
+  - Performance (`/cart/add` p95): 2.91мс → 200мс босгыг хангасан (PASS)
+  - Performance (`/report` p95): 389.15мс → 450мс босгыг хангасан (PASS)
+- **Бодит availability (хүсэлтээр тооцсон):** checks_total=5829, checks_succeeded=4544 → 4544/5829 = **77.95%**
+- **Тайлбар:** Сервер зогсож байх хугацаанд `/cart/add`, `/report`, `/pay` гурван endpoint зэрэг "connection refused" алдаа өгсөн тул нэг л crash үзэгдэл availability болон reliability хоёр SLO-г зэрэг зөрчлөө. Энэ нь эдгээр хоёр SLO бие биенээсээ бүрэн хамааралгүй биш гэдгийг харуулж байна — доод давхаргын систем (сервер процесс) унахад, өндөр давхаргын бүх метрик зэрэг доройтдог. Performance threshold-ууд (p95 latency) харин PASS хэвээрээ үлдсэн нь сервер ажиллаж байх үед хариу үзүүлэлт хэвийн байсныг илтгэнэ — асуудал зөвхөн downtime-тай холбоотой байсан.
 ### 3.3 FAIL гаралт (results/fail.txt)
 (дараа бөглөнө)
 
