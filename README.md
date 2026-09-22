@@ -83,7 +83,11 @@ Error budget (цагаар): Availability SLO 2 минутын (120 секунд
 - **Бодит availability (хүсэлтээр тооцсон):** checks_total=5829, checks_succeeded=4544 → 4544/5829 = **77.95%**
 - **Тайлбар:** Сервер зогсож байх хугацаанд `/cart/add`, `/report`, `/pay` гурван endpoint зэрэг "connection refused" алдаа өгсөн тул нэг л crash үзэгдэл availability болон reliability хоёр SLO-г зэрэг зөрчлөө. Энэ нь эдгээр хоёр SLO бие биенээсээ бүрэн хамааралгүй биш гэдгийг харуулж байна — доод давхаргын систем (сервер процесс) унахад, өндөр давхаргын бүх метрик зэрэг доройтдог. Performance threshold-ууд (p95 latency) харин PASS хэвээрээ үлдсэн нь сервер ажиллаж байх үед хариу үзүүлэлт хэвийн байсныг илтгэнэ — асуудал зөвхөн downtime-тай холбоотой байсан.
 ### 3.3 FAIL гаралт (results/fail.txt)
-(дараа бөглөнө)
+- Ажиллуулсан команд: `k6 run slo-test-fail.js 2>&1 | tee results/fail.txt`
+- Санаатайгаар `/cart/add` дээрх performance threshold-ыг бодит боломжгүй хэмжээнд хатууруулав: `p(95)<1` (1 миллисекунд).
+- **FAIL болсон мөр:** `http_req_duration{name:cart}` — `'p(95)<1' p(95)=2.7ms` — заасан 1мс-ээс бодит p95=2.7мс их байсан тул FAIL.
+- Бусад 3 threshold (checks 98.01%, report p95=390.8мс, pay error rate 5.94%) хэвийн PASS байв — зөвхөн зориудаар хатууруулсан нэг threshold FAIL болсон.
+- **Exit code:** k6-ийн жинхэнэ exit code (`${PIPESTATUS[0]}` ашиглан авсан) = **99**. Энэ нь k6-ийн стандарт "threshold зөрчигдсөн" exit code бөгөөд CI/CD дээр pipeline-ийг зогсооход ашиглагддаг.
 
 ---
 
