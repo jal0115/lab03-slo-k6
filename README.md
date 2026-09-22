@@ -64,7 +64,13 @@ Error budget (цагаар): Availability SLO 2 минутын (120 секунд
 ## 3. k6 threshold тестийн үр дүн
 
 ### 3.1 PASS гаралт (results/pass.txt)
-(дараа бөглөнө)
+- Ажиллуулсан команд: `k6 run slo-test.js 2>&1 | tee results/pass.txt`
+- Үр дүн: Бүх 4 threshold амжилттай (PASS) гарлаа:
+  - Performance (`/cart/add`): p(95) = 3.06мс (< 200мс босго) ✓
+  - Reliability (`/pay`): error rate = 3.78% (< 8% босго) ✓
+  - Availability (`checks`): rate = 98.73% (> 90% босго) ✓
+  - Нэмэлт Performance (`/report`): p(95) = 393.74мс (< 450мс босго) ✓
+- Нийт 2775 HTTP хүсэлт, 925 iteration, 20 VU-аар 1 минутын турш ажиллав.
 
 ### 3.2 Chaos тест (results/chaos.txt)
 (дараа бөглөнө)
